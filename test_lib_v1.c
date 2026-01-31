@@ -84,6 +84,62 @@ int main() {
 	logln("logln should append a newline character");
 	assert(logln("%s", "test") == 5);
 
+	logln("Arenas can be made, dropped, wiped, and bumped");
+
+	#define CAP 10
+	Arena* a = make_arena(CAP, sizeof(int));
+	assert(a != NULL);
+	assert(a->capacity == CAP);
+	assert(a->length == 0);
+	assert(a->elem_size == sizeof(int));
+
+	int* elems[CAP];
+	for (int i = 0; i < CAP; i++) {
+		elems[i] = bump_arena(a);
+		assert(elems[i] != NULL);
+		*elems[i] = i;
+	}
+	assert(a->length == CAP);
+	for (int i = 0; i < CAP; i++) {
+		assert(*elems[i] == i);
+	}
+
+	assert(bump_arena(a) == NULL);
+
+	wipe_arena(a);
+	assert(a != NULL);
+	assert(a->capacity == CAP);
+	assert(a->length == 0);
+	assert(a->elem_size == sizeof(int));
+
+	for (int i = 0; i < CAP; i++) {
+		elems[i] = bump_arena(a);
+		assert(elems[i] != NULL);
+		*elems[i] = i;
+	}
+	assert(a->length == CAP);
+	for (int i = 0; i < CAP; i++) {
+		assert(*elems[i] == i);
+	}
+
+	drop_arena(a);
+
+	Pool* p = make_pool(2, sizeof(size_t));
+	assert(p != NULL);
+	assert(p->free_list == NULL);
+
+	size_t* x = take_pool(p);
+	size_t* y = take_pool(p);
+	assert(take_pool(p) == NULL);
+	*x = 1;
+	*y = 2;
+
+	give_pool(p, y);
+	size_t* z = take_pool(p);
+	assert(z != NULL);
+	assert(z == y);
+	assert(take_pool(p) == NULL);
+
 	logln("PASSED");
 }
 

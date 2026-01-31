@@ -2,7 +2,7 @@
 
 set -e
 
-CFLAGS="-Wall -Wextra -O0"
+CFLAGS="-Wall -Wextra -O0 -g"
 
 mkdir -p _build
 
