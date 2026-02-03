@@ -4,12 +4,21 @@
 
 #define BUNUEL_PIN_API_1
 #define BUNUEL_STRIP_PREFIX
-#include "./lib.h"
+#include <bunuel.h>
+#include "./test_lib_v1.h"
 
 #define LOG_LEVEL_KEY "BUNUEL_LOG_LEVEL"
 
 void check_str_match(char *a, char *b) {
 	assert(strcmp(a, b) == 0);
+}
+
+static inline bool float_set_eq(float *a, float *b) {
+	return *a == *b;
+}
+
+static inline bool int_set_eq(int *a, int *b) {
+	return *a == *b;
 }
 
 int main() {
@@ -139,6 +148,45 @@ int main() {
 	assert(z != NULL);
 	assert(z == y);
 	assert(take_pool(p) == NULL);
+
+	logln("");
+	logln("Generated int and float sets work like sets");
+
+	logln("They have their capacity available when created");
+	intSet xs = {0};
+	floatSet ys = {0};
+	assert(xs.count == 0);
+	assert(int_set_avail(&xs) == 3);
+	assert(ys.count == 0);
+	assert(float_set_avail(&ys) == 3);
+	
+	logln("They can have elements added to them, using capacity");
+	int_set_add(&xs, 1);
+	assert(xs.count == 1);
+	assert(int_set_avail(&xs) == 2);
+	float_set_add(&ys, 1.0);
+	assert(ys.count == 1);
+	assert(float_set_avail(&ys) == 2);
+
+	logln("Adding elements already in the set does nothing");
+	int_set_add(&xs, 1);
+	assert(xs.count == 1);
+	assert(int_set_avail(&xs) == 2);
+	
+	logln("Removing items not in the set does nothing");
+	// TODO: reconsider set remove taking pointer to element
+	int nintynine = 99;
+	int_set_remove(&xs, &nintynine);
+	assert(xs.count == 1);
+	assert(int_set_avail(&xs) == 2);
+
+	logln("Removing items in the set removes them");
+	int one = 1;
+	int_set_remove(&xs, &one);
+	assert(xs.count == 0);
+	assert(int_set_avail(&xs) == 3);
+
+	logln("FIXED SET TESTING NOT COMPLETELY IMPLEMENTED");
 
 	logln("PASSED");
 }

@@ -2,7 +2,7 @@
 
 #define BUNUEL_PIN_API_0
 #define BUNUEL_STRIP_PREFIX
-#include "./lib.h"
+#include <bunuel.h>
 
 int main() {
 

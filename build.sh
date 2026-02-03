@@ -1,21 +1,44 @@
-#! /bin/bash
+#!/usr/bin/env bash
 
 set -e
 
-CFLAGS="-Wall -Wextra -O0 -g"
+CFLAGS="-Wall -Wextra -O0 -g -lbunuel"
+BUNUEL_CFILES="platform/lib.c allocate/lib.c string/lib.c log/lib.c"
 
 mkdir -p _build
 
 echo "Building Bunuel lib v0 test"
-gcc $CFLAGS -o _build/test_lib_v0 test_lib_v0.c lib.c
+gcc $CFLAGS -o _build/test_lib_v0 test_lib_v0.c $BUNUEL_CFILES
 echo "Running test"
 ./_build/test_lib_v0
 echo
 
 echo "Building Bunuel lib v1 test"
-gcc $CFLAGS -o _build/test_lib_v1 test_lib_v1.c lib.c
+echo "" > test_lib_v1.h # clear the file
+source test_lib_v1_codegen.sh >> test_lib_v1.h
+gcc $CFLAGS -o _build/test_lib_v1 test_lib_v1.c $BUNUEL_CFILES
 echo "Running test"
 ./_build/test_lib_v1
 echo
 
-echo "fin."
+echo "Building library artifacts"
+for src in $BUNUEL_CFILES; do
+	gcc $CFLAGS -c $src -o "_build/${src%/lib.c}.o"
+done
+ar rcs _build/libbunuel.a _build/*.o
+
+echo "Building namer"
+(
+	cd namer || exit
+	./build.sh
+	./namer
+)
+
+echo "Building /remote/"
+(
+	cd remote || exit
+	./build.sh
+	./test_remote
+)
+
+echo "voila."
