@@ -48,12 +48,14 @@
 	#define bunuel_Window bunuel_Window_v0
 	#define bunuel_open_window bunuel_open_window_v0
 	#define bunuel_close_window bunuel_close_window_v0
+	#define bunuel_window_clear bunuel_window_clear_v0
+	#define bunuel_window_present bunuel_window_present_v0
 
 	#define bunuel_EventType bunuel_Event_type_v0
 	#define bunuel_Event bunuel_Event_v0
 	#define bunuel_event_type_name bunuel_event_type_name_v0
 	#define bunuel_event_name bunuel_event_name_v0
-	#define bunuel_take_event bunuel_take_event_v0
+	#define bunuel_event_take bunuel_event_take_v0
 
 	// string
 	#define bunuel_Str32 bunuel_Str32_v0
@@ -75,6 +77,7 @@
 
 	// log
 	#define bunuel_error bunuel_error_v0
+
 	#define bunuel_warning bunuel_warning_v0
 	#define bunuel_info bunuel_info_v0
 	#define bunuel_debug bunuel_debug_v0
@@ -90,12 +93,14 @@
 	#define bunuel_Window bunuel_Window_v0
 	#define bunuel_open_window bunuel_open_window_v0
 	#define bunuel_close_window bunuel_close_window_v0
+	#define bunuel_window_clear bunuel_window_clear_v0
+	#define bunuel_window_present bunuel_window_present_v0
 
 	#define bunuel_EventType bunuel_Event_type_v0
 	#define bunuel_Event bunuel_Event_v0
 	#define bunuel_event_type_name bunuel_event_type_name_v0
 	#define bunuel_event_name bunuel_event_name_v0
-	#define bunuel_take_event bunuel_take_event_v0
+	#define bunuel_event_take bunuel_event_take_v0
 
 	// string
 	#define bunuel_Str32 bunuel_Str32_v0
@@ -132,26 +137,30 @@
 	#define Window    bunuel_Window
 	#define Window_v0 bunuel_Window_v0
 	
-	#define open_window     bunuel_open_window
-	#define open_window_v0  bunuel_open_window_v0
-	#define close_window    bunuel_close_window
-	#define close_window_v0 bunuel_close_window_v0
+	#define open_window       bunuel_open_window
+	#define open_window_v0    bunuel_open_window_v0
+	#define close_window      bunuel_close_window
+	#define close_window_v0   bunuel_close_window_v0
+	#define window_clear_v0   bunuel_window_clear_v0
+	#define window_clear      bunuel_window_clear
+	#define window_present_v0 bunuel_window_present_v0
+	#define window_present    bunuel_window_present
 
-	#define EventType          bunuel_Event_type
-	#define EventType_v0       bunuel_Event_type_v0
+	#define EventType          bunuel_EventType
+	#define EventType_v0       bunuel_EventType_v0
 	#define Event              bunuel_Event
 	#define Event_v0           bunuel_Event_v0
 	#define event_type_name    bunuel_event_type_name
 	#define event_type_name_v0 bunuel_event_type_name_v0
 	#define event_name         bunuel_event_name
 	#define event_name_v0      bunuel_event_name_v0
-	#define take_event         bunuel_take_event
-	#define take_event_v0      bunuel_take_event_v0
+	#define event_take         bunuel_event_take
+	#define event_take_v0      bunuel_event_take_v0
 
 	#define DO_NOTHING        BUNUEL_DO_NOTHING
 	#define DO_QUIT           BUNUEL_DO_QUIT
 	#define DID_WINDOW_RESIZE BUNUEL_DID_WINDOW_RESIZE
-	#define DID_MAX           BUNUDL_DID_MAX
+	#define EVENT_MAX         BUNUEL_EVENT_MAX
 	
 	// string
 	#define Str32         bunuel_Str32
