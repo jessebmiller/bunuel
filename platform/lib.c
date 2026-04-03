@@ -58,9 +58,23 @@ bool bunuel_window_clear_v0(Window_v0 *window) {
 	return SDL_RenderClear(window->renderer);
 }
 
+bool bunuel_window_draw_rect_v0(Window_v0 window,
+ 	size_t x, size_t y, size_t width, size_t height,
+	RGB8_v0 c
+) {
+	SDL_SetRenderColor(window->renderer, c.r, c.g, c.b, c.a);
+	SDL_Rect rect = {x, y, width, height};
+	SDL_RenderRect(window->renderer, &rect);
+}
+
 bool bunuel_window_present_v0(Window_v0 *window) {
 	return SDL_RenderPresent(window->renderer);
 }
+
+// TODO: When we implement GPU graphics and need the "begin" and "end"
+//       for command batching consider requiring that we hold a 
+//       "batch" type to do the draw calls then submit the batch to
+//       make what's happening clear.
 
 // EVENTS
 
@@ -78,23 +92,35 @@ char* bunuel_event_name_v0(Event_v0 event) {
 	return bunuel_event_type_name_v0(event.type);
 }
 
-static bool from_sdl_event(Event_v0 *event, SDL_Event *sdl_event) {
-	if (sdl_event->type == SDL_EVENT_QUIT) {
+static bool handle_sdl_event(Window_v0 *window, Event_v0 *event, SDL_Event *sdl_event) {
+	switch(sdl_event->type) {
+	case SDL_EVENT_QUIT: {
 		event->type = DO_QUIT;
+		debug("Got DO_QUIT event");
 		return true;
 	}
-	return false;
+	case SDL_EVENT_WINDOW_RESIZED: {
+		event->type = DID_WINDOW_RESIZE;
+		window->width = sdl_event->window.data1;
+		window->height = sdl_event->window.data2;
+		debug("Window resized to %dx%d", window->width, window->height);
+		return true;
+	}
+	default:
+		debug("Unknown SDL_Event.type(%s)", sdl_event->type);
+		return false;
+	}
 }
 
-bool bunuel_event_take_v0(Event_v0 *event) {
+bool bunuel_event_take_v0(Window_v0 *window, Event_v0 *event) {
 	SDL_Event sdl_event;
-	if(!SDL_PollEvent(&sdl_event)) return false;
-	return from_sdl_event(event, &sdl_event);	
+	if(!SDL_PollEvent(&sdl_event)) return 0;
+	return handle_sdl_event(window, event, &sdl_event);
 }
 
-bool bunuel_event_wait_v0(Event_v0 *event) {
+bool bunuel_event_wait_v0(Window_v0 *window, Event_v0 *event) {
 	SDL_Event sdl_event;
-	if (!SDL_WaitEvent(&sdl_event)) return false;
-	return from_sdl_event(event, &sdl_event);
+	if(!SDL_WaitEvent(&sdl_event)) return 0;
+	return handle_sdl_event(window, event, &sdl_event);
 }
 
